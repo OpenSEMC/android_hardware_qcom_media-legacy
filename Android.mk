@@ -1,4 +1,4 @@
-ifeq ($(BOARD_USES_LEGACY_QCOM),true)
+ifeq ($(TARGET_QCOM_DISPLAY_VARIANT),legacy)
     ifeq ($(TARGET_BOARD_PLATFORM),msm8660)
         include $(call all-subdir-makefiles)
     endif
