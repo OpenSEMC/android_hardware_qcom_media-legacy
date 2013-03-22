@@ -1,4 +1,4 @@
-ifneq ($(filter msm8960 msm7630_surf,$(TARGET_BOARD_PLATFORM)),)
+ifeq ($(TARGET_QCOM_DISPLAY_VARIANT),legacy)
 
 include $(call all-subdir-makefiles)
 
