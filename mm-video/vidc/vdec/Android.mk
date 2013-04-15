@@ -69,9 +69,6 @@ libmm-vdec-inc          += hardware/qcom/display-legacy/libgralloc
 libmm-vdec-inc          += hardware/qcom/display-legacy/libgenlock
 libmm-vdec-inc          += frameworks/native/include/media-legacy/openmax
 libmm-vdec-inc          += frameworks/native/include/media-legacy/hardware
-libmm-vdec-inc          += hardware/qcom/media-legacy/libc2dcolorconvert
-libmm-vdec-inc          += hardware/qcom/display-legacy/libcopybit
-libmm-vdec-inc          += frameworks/av/include/media/stagefright
 libmm-vdec-inc          += hardware/qcom/display-legacy/libqservice
 
 
@@ -81,7 +78,7 @@ LOCAL_CFLAGS                    := $(libOmxVdec-def)
 LOCAL_C_INCLUDES                += $(libmm-vdec-inc)
 
 LOCAL_PRELINK_MODULE    := false
-LOCAL_SHARED_LIBRARIES  := liblog libutils libbinder libcutils libdl
+LOCAL_SHARED_LIBRARIES  := liblog libutils libbinder libcutils
 
 LOCAL_SHARED_LIBRARIES += libgenlock
 LOCAL_SHARED_LIBRARIES  += libdivxdrmdecrypt
@@ -93,7 +90,6 @@ LOCAL_SRC_FILES         += src/ts_parser.cpp
 LOCAL_SRC_FILES         += src/mp4_utils.cpp
 LOCAL_SRC_FILES         += src/omx_vdec.cpp
 LOCAL_SRC_FILES         += ../common/src/extra_data_handler.cpp
-LOCAL_SRC_FILES         += ../common/src/vidc_color_converter.cpp
 
 include $(BUILD_SHARED_LIBRARY)
 
