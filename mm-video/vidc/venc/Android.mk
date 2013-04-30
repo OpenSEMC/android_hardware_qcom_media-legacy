@@ -51,6 +51,9 @@ include $(CLEAR_VARS)
 libmm-venc-inc      := bionic/libc/include
 libmm-venc-inc      += bionic/libstdc++/include
 libmm-venc-inc      := $(LOCAL_PATH)/inc
+ifneq ($(TARGET_KERNEL_SOURCE),)
+libmm-venc-inc      += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
+endif
 libmm-venc-inc      += $(OMX_VIDEO_PATH)/vidc/common/inc
 libmm-venc-inc      += hardware/qcom/media-legacy/mm-core/inc
 libmm-venc-inc      += hardware/qcom/media-legacy/libstagefrighthw
@@ -67,7 +70,9 @@ LOCAL_MODULE                    := libOmxVenc
 LOCAL_MODULE_TAGS               := optional
 LOCAL_CFLAGS                    := $(libmm-venc-def)
 LOCAL_C_INCLUDES                := $(libmm-venc-inc)
-
+ifneq ($(TARGET_KERNEL_SOURCE),)
+LOCAL_ADDITIONAL_DEPENDENCIES   := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
+endif
 LOCAL_PRELINK_MODULE      := false
 LOCAL_SHARED_LIBRARIES    := liblog libutils libbinder libcutils \
                              libc2dcolorconvert libdl
@@ -93,6 +98,9 @@ include $(CLEAR_VARS)
 
 mm-venc-test720p-inc            := $(TARGET_OUT_HEADERS)/mm-core
 mm-venc-test720p-inc            += $(LOCAL_PATH)/inc
+ifneq ($(TARGET_KERNEL_SOURCE),)
+mm-venc-test720p-inc            += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
+endif
 mm-venc-test720p-inc            += $(OMX_VIDEO_PATH)/vidc/common/inc
 mm-venc-test720p-inc            += hardware/qcom/media-legacy/mm-core/inc
 mm-venc-test720p-inc            += hardware/qcom/display-legacy/libgralloc
@@ -101,7 +109,9 @@ LOCAL_MODULE                    := mm-venc-omx-test720p
 LOCAL_MODULE_TAGS               := optional
 LOCAL_CFLAGS                    := $(libmm-venc-def)
 LOCAL_C_INCLUDES                := $(mm-venc-test720p-inc)
-#LOCAL_ADDITIONAL_DEPENDENCIES   := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
+ifneq ($(TARGET_KERNEL_SOURCE),)
+LOCAL_ADDITIONAL_DEPENDENCIES   := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
+endif
 LOCAL_PRELINK_MODULE            := false
 LOCAL_SHARED_LIBRARIES          := libmm-omxcore libOmxVenc libbinder
 
@@ -119,13 +129,17 @@ include $(BUILD_EXECUTABLE)
 include $(CLEAR_VARS)
 
 venc-test-inc                   += $(LOCAL_PATH)/inc
+ifneq ($(TARGET_KERNEL_SOURCE),)
+venc-test-inc                   += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
+endif
 
 LOCAL_MODULE                    := mm-video-encdrv-test
 LOCAL_MODULE_TAGS               := optional
 LOCAL_C_INCLUDES                := $(venc-test-inc)
 LOCAL_C_INCLUDES                += hardware/qcom/media-legacy/mm-core/inc
-
-#LOCAL_ADDITIONAL_DEPENDENCIES   := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
+ifneq ($(TARGET_KERNEL_SOURCE),)
+LOCAL_ADDITIONAL_DEPENDENCIES   := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
+endif
 LOCAL_PRELINK_MODULE            := false
 
 LOCAL_SRC_FILES                 := test/video_encoder_test.c
