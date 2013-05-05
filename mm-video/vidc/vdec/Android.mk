@@ -64,7 +64,9 @@ libmm-vdec-inc          += bionic/libstdc++/include
 libmm-vdec-inc          += $(LOCAL_PATH)/inc 
 libmm-vdec-inc          += $(OMX_VIDEO_PATH)/vidc/common/inc
 libmm-vdec-inc          += hardware/qcom/media-legacy/mm-core/inc
+ifneq ($(TARGET_PREBUILT_HEADERS),true)
 libmm-vdec-inc          += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
+endif
 #DRM include - Interface which loads the DRM library
 libmm-vdec-inc	        += $(OMX_VIDEO_PATH)/DivxDrmDecrypt/inc
 libmm-vdec-inc          += hardware/qcom/display-legacy/libgralloc
@@ -102,7 +104,9 @@ include $(CLEAR_VARS)
 
 mm-vdec-test-inc    := hardware/qcom/media-legacy/mm-core/inc
 mm-vdec-test-inc    += $(LOCAL_PATH)/inc
+ifneq ($(TARGET_PREBUILT_HEADERS),true)
 mm-vdec-test-inc    += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
+endif
 
 LOCAL_MODULE                    := mm-vdec-omx-test
 LOCAL_MODULE_TAGS               := optional
@@ -124,8 +128,9 @@ include $(CLEAR_VARS)
 
 mm-vdec-drv-test-inc    := hardware/qcom/media-legacy/mm-core/inc
 mm-vdec-drv-test-inc    += $(LOCAL_PATH)/inc
+ifneq ($(TARGET_PREBUILT_HEADERS),true)
 mm-vdec-drv-test-inc    += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
-
+endif
 LOCAL_MODULE                    := mm-video-driver-test
 LOCAL_MODULE_TAGS               := optional
 LOCAL_CFLAGS                    := $(libOmxVdec-def)

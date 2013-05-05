@@ -57,7 +57,9 @@ libmm-venc-inc      += bionic/libstdc++/include
 libmm-venc-inc      += $(LOCAL_PATH)/inc
 libmm-venc-inc      += $(OMX_VIDEO_PATH)/vidc/common/inc
 libmm-venc-inc      += hardware/qcom/media-legacy/mm-core/inc
+ifneq ($(TARGET_PREBUILT_HEADERS),true)
 libmm-venc-inc      += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
+endif
 libmm-venc-inc      += hardware/qcom/media-legacy/libstagefrighthw
 libmm-venc-inc      += hardware/qcom/display-legacy/libgralloc
 libmm-venc-inc      += frameworks/native/include/media/hardware
@@ -101,7 +103,9 @@ LOCAL_MODULE                    := mm-venc-omx-test720p
 LOCAL_MODULE_TAGS               := optional
 LOCAL_CFLAGS                    := $(libmm-venc-def)
 LOCAL_C_INCLUDES                := $(mm-venc-test720p-inc)
+ifneq ($(TARGET_PREBUILT_HEADERS),true)
 LOCAL_ADDITIONAL_DEPENDENCIES   := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
+endif
 LOCAL_PRELINK_MODULE            := false
 LOCAL_SHARED_LIBRARIES          := libmm-omxcore libOmxVenc libbinder
 
@@ -126,8 +130,10 @@ LOCAL_MODULE_TAGS               := optional
 LOCAL_C_INCLUDES                := $(venc-test-inc)
 LOCAL_C_INCLUDES                += hardware/qcom/media-legacy/mm-core/inc
 
+ifneq ($(TARGET_PREBUILT_HEADERS),true)
 LOCAL_ADDITIONAL_DEPENDENCIES   := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
 LOCAL_PRELINK_MODULE            := false
+endif
 
 LOCAL_SRC_FILES                 := test/video_encoder_test.c
 LOCAL_SRC_FILES                 += test/queue.c
