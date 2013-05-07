@@ -104,6 +104,7 @@ include $(CLEAR_VARS)
 
 mm-vdec-test-inc    := hardware/qcom/media-legacy/mm-core/inc
 mm-vdec-test-inc    += $(LOCAL_PATH)/inc
+
 ifneq ($(TARGET_PREBUILT_HEADERS),true)
 mm-vdec-test-inc    += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 endif
@@ -131,6 +132,7 @@ mm-vdec-drv-test-inc    += $(LOCAL_PATH)/inc
 ifneq ($(TARGET_PREBUILT_HEADERS),true)
 mm-vdec-drv-test-inc    += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 endif
+
 LOCAL_MODULE                    := mm-video-driver-test
 LOCAL_MODULE_TAGS               := optional
 LOCAL_CFLAGS                    := $(libOmxVdec-def)
