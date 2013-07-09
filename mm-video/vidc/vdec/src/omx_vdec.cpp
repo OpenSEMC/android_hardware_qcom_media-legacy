@@ -2893,7 +2893,11 @@ OMX_ERRORTYPE  omx_vdec::get_parameter(OMX_IN OMX_HANDLETYPE     hComp,
                         nativeBuffersUsage->nUsage = (GRALLOC_USAGE_PRIVATE_MM_HEAP | GRALLOC_USAGE_PROTECTED |
                                                       GRALLOC_USAGE_PRIVATE_CP_BUFFER | GRALLOC_USAGE_PRIVATE_UNCACHED);
                 } else {
+#ifdef CUSTOM_MM_HEAP
+			nativeBuffersUsage->nUsage = (GRALLOC_USAGE_PRIVATE_MM_HEAP);
+#else
                         nativeBuffersUsage->nUsage = (GRALLOC_USAGE_PRIVATE_IOMMU_HEAP);
+#endif
                 }
 #endif //(MAX_RES_720P)
 #else
