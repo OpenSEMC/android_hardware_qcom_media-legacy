@@ -60,14 +60,14 @@ libmm-vdec-inc          += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 #libmm-vdec-inc          += bionic/libc/kernel/common/linux
 #DRM include - Interface which loads the DRM library
 libmm-vdec-inc	        += $(OMX_VIDEO_PATH)/DivxDrmDecrypt/inc
-libmm-vdec-inc          += hardware/qcom/display/libgralloc
-libmm-vdec-inc          += hardware/qcom/display/libgenlock
+libmm-vdec-inc          += hardware/qcom/display-legacy/libgralloc
+libmm-vdec-inc          += hardware/qcom/display-legacy/libgenlock
 libmm-vdec-inc          += frameworks/native/include/media/openmax
 libmm-vdec-inc          += frameworks/native/include/media/hardware
-libmm-vdec-inc          += hardware/qcom/media/libc2dcolorconvert
-libmm-vdec-inc          += hardware/qcom/display/libcopybit
+libmm-vdec-inc          += hardware/qcom/media-legacy/libc2dcolorconvert
+libmm-vdec-inc          += hardware/qcom/display-legacy/libcopybit
 libmm-vdec-inc          += frameworks/av/include/media/stagefright
-libmm-vdec-inc          += hardware/qcom/display/libqservice
+libmm-vdec-inc          += hardware/qcom/display-legacy/libqservice
 
 
 LOCAL_MODULE                    := libOmxVdec
@@ -99,7 +99,7 @@ include $(BUILD_SHARED_LIBRARY)
 # ---------------------------------------------------------------------------------
 include $(CLEAR_VARS)
 
-mm-vdec-test-inc    := hardware/qcom/media/mm-core/inc
+mm-vdec-test-inc    := hardware/qcom/media-legacy/mm-core/inc
 mm-vdec-test-inc    += $(LOCAL_PATH)/inc
 mm-vdec-test-inc    += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 #mm-vdec-test-inc    += bionic/libc/kernel/common/linux
@@ -124,13 +124,13 @@ include $(BUILD_EXECUTABLE)
 # ---------------------------------------------------------------------------------
 include $(CLEAR_VARS)
 
-mm-vdec-drv-test-inc    := hardware/qcom/media/mm-core/inc
+mm-vdec-drv-test-inc    := hardware/qcom/media-legacy/mm-core/inc
 mm-vdec-drv-test-inc    += $(LOCAL_PATH)/inc
 mm-vdec-drv-test-inc    += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 #mm-vdec-drv-test-inc    += bionic/libc/kernel/common/linux
 
 LOCAL_MODULE                    := mm-video-driver-test
-LOCAL_MODULE_TAGS               := optional
+LOCAL_MODULE_TAGS               := debug
 LOCAL_CFLAGS                    := $(libOmxVdec-def)
 LOCAL_C_INCLUDES                := $(mm-vdec-drv-test-inc)
 LOCAL_PRELINK_MODULE            := false

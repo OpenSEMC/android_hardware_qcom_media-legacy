@@ -43,6 +43,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <semaphore.h>
 #include "OMX_QCOMExtns.h"
 #include <sys/time.h>
+#include <cutils/properties.h>
 
 #include <linux/android_pmem.h>
 
@@ -585,7 +586,8 @@ void* ebd_thread(void* pArg)
     pthread_mutex_unlock(&etb_lock);
     if(pBuffer == NULL)
     {
-      DEBUG_PRINT_ERROR("Error - No etb pBuffer to dequeue\n");
+      // FIXME: ???
+      //DEBUG_PRINT_ERROR("Error - No etb pBuffer to dequeue\n");
       continue;
     }
 
@@ -800,14 +802,18 @@ void* fbd_thread(void* pArg)
             }
             break;
             default:
-              DEBUG_PRINT_ERROR("Unknown Extrata!");
+              // FIXME: ???
+	      //DEBUG_PRINT_ERROR("Unknown Extrata!");
+	      // FIXME: --- This is pure BS ---
+	      DEBUG_PRINT("\n");
           }
           if (pExtra->nSize < (pBuffer->nAllocLen - (OMX_U32)pExtra))
             pExtra = (OMX_OTHER_EXTRADATATYPE *) (((OMX_U8 *) pExtra) + pExtra->nSize);
           else
           {
-            DEBUG_PRINT_ERROR("ERROR: Extradata pointer overflow buffer(%p) extra(%p)",
-              pBuffer, pExtra);
+	    // FIXME: ???
+            //DEBUG_PRINT_ERROR("ERROR: Extradata pointer overflow buffer(%p) extra(%p)",
+            //  pBuffer, pExtra);
             pExtra = NULL;
           }
         }
@@ -866,7 +872,8 @@ void* fbd_thread(void* pArg)
         }
         if(push(fbd_queue, (void *)pBuffer) < 0)
         {
-          DEBUG_PRINT_ERROR("Error in enqueueing fbd_data\n");
+	  // FIXME: ???
+          //DEBUG_PRINT_ERROR("Error in enqueueing fbd_data\n");
         }
         else
           sem_post(&fbd_sem);
@@ -1012,14 +1019,16 @@ OMX_ERRORTYPE EventHandler(OMX_IN OMX_HANDLETYPE hComponent,
             }
             else
             {
-                DEBUG_PRINT_ERROR("OMX_EventBufferFlag Event not handled\n");
+		// FIXME: ???
+                //DEBUG_PRINT_ERROR("OMX_EventBufferFlag Event not handled\n");
             }
             break;
         case OMX_EventIndexsettingChanged:
             DEBUG_PRINT("OMX_EventIndexSettingChanged Interlace mode[%x]\n", nData1);
             break;
         default:
-            DEBUG_PRINT_ERROR("ERROR - Unknown Event \n");
+	    //FIXME: ???
+            //DEBUG_PRINT_ERROR("ERROR - Unknown Event \n");
             break;
     }
     return OMX_ErrorNone;
@@ -1044,7 +1053,8 @@ OMX_ERRORTYPE EmptyBufferDone(OMX_IN OMX_HANDLETYPE hComponent,
     pthread_mutex_lock(&etb_lock);
     if(push(etb_queue, (void *) pBuffer) < 0)
     {
-       DEBUG_PRINT_ERROR("Error in enqueue  ebd data\n");
+       // FIXME: ???
+       //DEBUG_PRINT_ERROR("Error in enqueue  ebd data\n");
        return OMX_ErrorUndefined;
     }
     pthread_mutex_unlock(&etb_lock);
@@ -1076,7 +1086,8 @@ OMX_ERRORTYPE FillBufferDone(OMX_OUT OMX_HANDLETYPE hComponent,
     if(push(fbd_queue, (void *)pBuffer) < 0)
     {
       pthread_mutex_unlock(&fbd_lock);
-      DEBUG_PRINT_ERROR("Error in enqueueing fbd_data\n");
+      // FIXME: ???
+      //DEBUG_PRINT_ERROR("Error in enqueueing fbd_data\n");
       return OMX_ErrorUndefined;
     }
     pthread_mutex_unlock(&fbd_lock);
@@ -1458,23 +1469,28 @@ int main(int argc, char **argv)
     pthread_mutex_destroy(&eos_lock);
     if (-1 == sem_destroy(&etb_sem))
     {
-      DEBUG_PRINT_ERROR("Error - sem_destroy failed %d\n", errno);
+      // FIXME: ???
+      //DEBUG_PRINT_ERROR("Error - sem_destroy failed %d\n", errno);
     }
     if (-1 == sem_destroy(&fbd_sem))
     {
-      DEBUG_PRINT_ERROR("Error - sem_destroy failed %d\n", errno);
+      // FIXME: ???
+      //DEBUG_PRINT_ERROR("Error - sem_destroy failed %d\n", errno);
     }
     if (-1 == sem_destroy(&seq_sem))
     {
-      DEBUG_PRINT_ERROR("Error - sem_destroy failed %d\n", errno);
+      // FIXME: ???
+      //DEBUG_PRINT_ERROR("Error - sem_destroy failed %d\n", errno);
     }
     if (-1 == sem_destroy(&in_flush_sem))
     {
-      DEBUG_PRINT_ERROR("Error - sem_destroy failed %d\n", errno);
+      // FIXME: ???
+      //DEBUG_PRINT_ERROR("Error - sem_destroy failed %d\n", errno);
     }
     if (-1 == sem_destroy(&out_flush_sem))
     {
-      DEBUG_PRINT_ERROR("Error - sem_destroy failed %d\n", errno);
+      // FIXME: ???
+      //DEBUG_PRINT_ERROR("Error - sem_destroy failed %d\n", errno);
     }
     if (displayYuv)
       close_display();
@@ -1535,7 +1551,8 @@ int run_tests()
 #endif
       if(Init_Decoder()!= 0x00)
       {
-        DEBUG_PRINT_ERROR("Error - Decoder Init failed\n");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("Error - Decoder Init failed\n");
         return -1;
       }
       if(Play_Decoder() != 0x00)
@@ -1544,7 +1561,8 @@ int run_tests()
       }
       break;
     default:
-      DEBUG_PRINT_ERROR("Error - Invalid Entry...%d\n",file_type_option);
+      // FIXME: ???
+      //DEBUG_PRINT_ERROR("Error - Invalid Entry...%d\n",file_type_option);
       break;
   }
 
@@ -1554,8 +1572,9 @@ int run_tests()
         seqFile = fopen (seq_file_name, "rb");
         if (seqFile == NULL)
         {
-            DEBUG_PRINT_ERROR("Error - Seq file %s could NOT be opened\n",
-                              seq_file_name);
+	    // FIXME: ???
+            //DEBUG_PRINT_ERROR("Error - Seq file %s could NOT be opened\n",
+            //                  seq_file_name);
             return -1;
         }
         else
@@ -1618,11 +1637,13 @@ int Init_Decoder()
     omxresult = OMX_Init();
 
     if(OMX_ErrorNone != omxresult) {
-        DEBUG_PRINT_ERROR("\n Failed to Init OpenMAX core");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("\n Failed to Init OpenMAX core");
         return -1;
     }
     else {
-        DEBUG_PRINT_ERROR("\nOpenMAX Core Init Done\n");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("\nOpenMAX Core Init Done\n");
     }
 
     /* Query for video decoders*/
@@ -1634,14 +1655,16 @@ int Init_Decoder()
         /* Allocate memory for pointers to component name */
         OMX_U8** vidCompNames = (OMX_U8**)malloc((sizeof(OMX_U8*))*total);
         if (vidCompNames == NULL) {
-            DEBUG_PRINT_ERROR("\nFailed to allocate vidCompNames\n");
+	    // FIXME: ???
+            //DEBUG_PRINT_ERROR("\nFailed to allocate vidCompNames\n");
             return -1;
         }
 
         for (i = 0; i < total; ++i) {
             vidCompNames[i] = (OMX_U8*)malloc(sizeof(OMX_U8)*OMX_MAX_STRINGNAME_SIZE);
             if (vidCompNames[i] == NULL) {
-                DEBUG_PRINT_ERROR("\nFailed to allocate vidCompNames[%d]\n", i);
+		// FIXME_ ???
+                //DEBUG_PRINT_ERROR("\nFailed to allocate vidCompNames[%d]\n", i);
                 return -1;
             }
         }
@@ -1654,7 +1677,8 @@ int Init_Decoder()
         free(vidCompNames);
     }
     else {
-        DEBUG_PRINT_ERROR("No components found with Role:%s", role);
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("No components found with Role:%s", role);
     }
 
     if (codec_format_option == CODEC_FORMAT_H264)
@@ -1694,14 +1718,16 @@ int Init_Decoder()
 #endif
     else
     {
-      DEBUG_PRINT_ERROR("Error: Unsupported codec %d\n", codec_format_option);
+      // FIXME: ???
+      //DEBUG_PRINT_ERROR("Error: Unsupported codec %d\n", codec_format_option);
       return -1;
     }
 
     omxresult = OMX_GetHandle((OMX_HANDLETYPE*)(&dec_handle),
                               (OMX_STRING)vdecCompNames, NULL, &call_back);
     if (FAILED(omxresult)) {
-        DEBUG_PRINT_ERROR("\nFailed to Load the component:%s\n", vdecCompNames);
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("\nFailed to Load the component:%s\n", vdecCompNames);
         return -1;
     }
     else
@@ -1722,7 +1748,8 @@ int Init_Decoder()
                                 (OMX_PTR)&portParam);
 
     if(FAILED(omxresult)) {
-        DEBUG_PRINT_ERROR("ERROR - Failed to get Port Param\n");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("ERROR - Failed to get Port Param\n");
         return -1;
     }
     else
@@ -1759,7 +1786,8 @@ int Init_Decoder()
     }
     else
     {
-      DEBUG_PRINT_ERROR("Error: Unsupported codec %d\n", codec_format_option);
+      // FIXME: ???
+      //DEBUG_PRINT_ERROR("Error: Unsupported codec %d\n", codec_format_option);
     }
 
 
@@ -1777,7 +1805,8 @@ int Play_Decoder()
 
     /* open the i/p and o/p files based on the video file format passed */
     if(open_video_file()) {
-        DEBUG_PRINT_ERROR("Error in opening video file\n");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("Error in opening video file\n");
         return -1;
     }
 
@@ -1876,14 +1905,16 @@ int Play_Decoder()
             int off;
 
             if ( read(inputBufferFileFd, &width, 4 ) == -1 ) {
-                DEBUG_PRINT_ERROR("\nFailed to read width for divx\n");
+		// FIXME: ???
+                //DEBUG_PRINT_ERROR("\nFailed to read width for divx\n");
                 return  -1;
             }
 
             DEBUG_PRINT("\nWidth for DIVX = %d\n", width);
 
             if ( read(inputBufferFileFd, &height, 4 ) == -1 ) {
-                DEBUG_PRINT_ERROR("\nFailed to read height for divx\n");
+		// FIXME: ???
+                //DEBUG_PRINT_ERROR("\nFailed to read height for divx\n");
                 return  -1;
             }
 
@@ -1939,13 +1970,15 @@ int Play_Decoder()
         if(OMX_SetParameter(dec_handle, OMX_IndexParamVideoPortFormat,
             (OMX_PTR)&videoportFmt) != OMX_ErrorNone)
         {
-            DEBUG_PRINT_ERROR("\n Setting Tile format failed");
+	    // FIXME: ???
+            //DEBUG_PRINT_ERROR("\n Setting Tile format failed");
             return -1;
         }
     }
     else
     {
-        DEBUG_PRINT_ERROR("\n Error in retrieving supported color formats");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("\n Error in retrieving supported color formats");
         return -1;
     }
     picture_order.nPortIndex = 1;
@@ -1979,7 +2012,8 @@ int Play_Decoder()
        error = Allocate_Buffer(dec_handle, &pInputBufHdrs, portFmt.nPortIndex,
                                portFmt.nBufferCountActual, portFmt.nBufferSize);
        if (error != OMX_ErrorNone) {
-           DEBUG_PRINT_ERROR("Error - OMX_AllocateBuffer Input buffer error\n");
+	   // FIXME: ???
+           //DEBUG_PRINT_ERROR("Error - OMX_AllocateBuffer Input buffer error\n");
            return -1;
        }
        else {
@@ -1988,14 +2022,16 @@ int Play_Decoder()
 #else
        // Use buffer on decoder's i/p port
           input_use_buffer = true;
-          DEBUG_PRINT_ERROR("\n before OMX_UseBuffer %p", &pInputBufHdrs);
+	  // FIXME: ???
+          //DEBUG_PRINT_ERROR("\n before OMX_UseBuffer %p", &pInputBufHdrs);
           error =  use_input_buffer(dec_handle,
                              &pInputBufHdrs,
                               portFmt.nPortIndex,
                               portFmt.nBufferSize,
                               portFmt.nBufferCountActual);
           if (error != OMX_ErrorNone) {
-             DEBUG_PRINT_ERROR("ERROR - OMX_UseBuffer Input buffer failed");
+	     // FIXME: ???
+             //DEBUG_PRINT_ERROR("ERROR - OMX_UseBuffer Input buffer failed");
              return -1;
           }
           else {
@@ -2009,14 +2045,16 @@ int Play_Decoder()
     DEBUG_PRINT("nMin Buffer Count=%d", portFmt.nBufferCountMin);
     DEBUG_PRINT("nBuffer Size=%d", portFmt.nBufferSize);
     if(OMX_DirOutput != portFmt.eDir) {
-        DEBUG_PRINT_ERROR("Error - Expect Output Port\n");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("Error - Expect Output Port\n");
         return -1;
     }
 
 #ifndef USE_EGL_IMAGE_TEST_APP
     if (use_external_pmem_buf)
     {
-        DEBUG_PRINT_ERROR("\n Use External pmem buf: OMX_UseBuffer %p", &pInputBufHdrs);
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("\n Use External pmem buf: OMX_UseBuffer %p", &pInputBufHdrs);
         error =  use_output_buffer_multiple_fd(dec_handle,
                                                &pOutYUVBufHdrs,
                                                portFmt.nPortIndex,
@@ -2031,7 +2069,8 @@ int Play_Decoder()
     }
     free_op_buf_cnt = portFmt.nBufferCountActual;
     if (error != OMX_ErrorNone) {
-        DEBUG_PRINT_ERROR("Error - OMX_AllocateBuffer Output buffer error\n");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("Error - OMX_AllocateBuffer Output buffer error\n");
         return -1;
     }
     else
@@ -2039,7 +2078,8 @@ int Play_Decoder()
         DEBUG_PRINT("OMX_AllocateBuffer Output buffer success\n");
     }
 #else
-    DEBUG_PRINT_ERROR("\n before OMX_UseBuffer %p", &pInputBufHdrs);
+    // FIXME: ???
+    //DEBUG_PRINT_ERROR("\n before OMX_UseBuffer %p", &pInputBufHdrs);
     error =  use_output_buffer(dec_handle,
                        &pOutYUVBufHdrs,
                         portFmt.nPortIndex,
@@ -2047,7 +2087,8 @@ int Play_Decoder()
                         portFmt.nBufferCountActual);
     free_op_buf_cnt = portFmt.nBufferCountActual;
     if (error != OMX_ErrorNone) {
-       DEBUG_PRINT_ERROR("ERROR - OMX_UseBuffer Input buffer failed");
+       // FIXME: ???
+       //DEBUG_PRINT_ERROR("ERROR - OMX_UseBuffer Input buffer failed");
        return -1;
     }
     else {
@@ -2072,7 +2113,8 @@ int Play_Decoder()
       }
       else
       {
-        DEBUG_PRINT_ERROR("Error - Decoder is in state %d and trying to call OMX_FreeHandle \n", state);
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("Error - Decoder is in state %d and trying to call OMX_FreeHandle \n", state);
         do_freeHandle_and_clean_up(true);
       }
       return -1;
@@ -2089,22 +2131,27 @@ int Play_Decoder()
     }
     if (pOutYUVBufHdrs == NULL)
     {
-        DEBUG_PRINT_ERROR("Error - pOutYUVBufHdrs is NULL\n");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("Error - pOutYUVBufHdrs is NULL\n");
         return -1;
     }
     for(bufCnt=0; bufCnt < portFmt.nBufferCountActual; ++bufCnt) {
         DEBUG_PRINT("OMX_FillThisBuffer on output buf no.%d\n",bufCnt);
         if (pOutYUVBufHdrs[bufCnt] == NULL)
         {
-            DEBUG_PRINT_ERROR("Error - pOutYUVBufHdrs[%d] is NULL\n", bufCnt);
+	    // FIXME: ???
+            //DEBUG_PRINT_ERROR("Error - pOutYUVBufHdrs[%d] is NULL\n", bufCnt);
             return -1;
         }
         pOutYUVBufHdrs[bufCnt]->nOutputPortIndex = 1;
         pOutYUVBufHdrs[bufCnt]->nFlags &= ~OMX_BUFFERFLAG_EOS;
         ret = OMX_FillThisBuffer(dec_handle, pOutYUVBufHdrs[bufCnt]);
         if (OMX_ErrorNone != ret)
-            DEBUG_PRINT_ERROR("Error - OMX_FillThisBuffer failed with result %d\n", ret);
-        else
+	{
+	    // FIXME: ???
+            //DEBUG_PRINT_ERROR("Error - OMX_FillThisBuffer failed with result %d\n", ret);
+	}        
+	else
         {
             DEBUG_PRINT("OMX_FillThisBuffer success!\n");
             free_op_buf_cnt--;
@@ -2131,8 +2178,9 @@ int Play_Decoder()
           bHdrflag = 1;
           pInputBufHdrs[0]->nFilledLen = Read_Buffer(pInputBufHdrs[0]);
           bHdrflag = 0;
-          DEBUG_PRINT_ERROR("After 1st Read_Buffer for VC1, "
-              "pInputBufHdrs[0]->nFilledLen %d\n", pInputBufHdrs[0]->nFilledLen);
+	  // FIXME: ???
+          //DEBUG_PRINT_ERROR("After 1st Read_Buffer for VC1, "
+          //    "pInputBufHdrs[0]->nFilledLen %d\n", pInputBufHdrs[0]->nFilledLen);
       }
       else
       {
@@ -2148,7 +2196,8 @@ int Play_Decoder()
       ret = OMX_EmptyThisBuffer(dec_handle, pInputBufHdrs[0]);
       if (ret != OMX_ErrorNone)
       {
-          DEBUG_PRINT_ERROR("ERROR - OMX_EmptyThisBuffer failed with result %d\n", ret);
+	  // FIXME: ???
+          //DEBUG_PRINT_ERROR("ERROR - OMX_EmptyThisBuffer failed with result %d\n", ret);
           do_freeHandle_and_clean_up(true);
           return -1;
       }
@@ -2186,7 +2235,8 @@ int Play_Decoder()
       DEBUG_PRINT("%s: Timestamp sent(%lld)", __FUNCTION__, pInputBufHdrs[i]->nTimeStamp);
       ret = OMX_EmptyThisBuffer(dec_handle, pInputBufHdrs[i]);
       if (OMX_ErrorNone != ret) {
-          DEBUG_PRINT_ERROR("ERROR - OMX_EmptyThisBuffer failed with result %d\n", ret);
+	  // FIXME: ???
+          //DEBUG_PRINT_ERROR("ERROR - OMX_EmptyThisBuffer failed with result %d\n", ret);
           do_freeHandle_and_clean_up(true);
           return -1;
       }
@@ -2232,7 +2282,8 @@ int Play_Decoder()
       }
       else
       {
-        DEBUG_PRINT_ERROR("Error - Decoder is in state %d and trying to call OMX_FreeHandle \n", state);
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("Error - Decoder is in state %d and trying to call OMX_FreeHandle \n", state);
         do_freeHandle_and_clean_up(true);
       }
       return -1;
@@ -2251,7 +2302,8 @@ int Play_Decoder()
       }
       else
       {
-        DEBUG_PRINT_ERROR("Error - Decoder is in state %d and trying to call OMX_FreeHandle \n", state);
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("Error - Decoder is in state %d and trying to call OMX_FreeHandle \n", state);
         do_freeHandle_and_clean_up(true);
       }
       return -1;
@@ -2296,7 +2348,8 @@ static OMX_ERRORTYPE use_input_buffer ( OMX_COMPONENTTYPE *dec_handle,
     *pBufHdrs= (OMX_BUFFERHEADERTYPE **)
                    malloc(sizeof(OMX_BUFFERHEADERTYPE)* bufCntMin);
     if(*pBufHdrs == NULL){
-        DEBUG_PRINT_ERROR("\n m_inp_heap_ptr Allocation failed ");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("\n m_inp_heap_ptr Allocation failed ");
         return OMX_ErrorInsufficientResources;
      }
 
@@ -2305,7 +2358,8 @@ static OMX_ERRORTYPE use_input_buffer ( OMX_COMPONENTTYPE *dec_handle,
       DEBUG_PRINT("OMX_UseBuffer No %d %d \n", bufCnt, bufSize);
       pvirt = (OMX_U8*) malloc (bufSize);
       if(pvirt == NULL){
-        DEBUG_PRINT_ERROR("\n pvirt Allocation failed ");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("\n pvirt Allocation failed ");
         return OMX_ErrorInsufficientResources;
      }
       error = OMX_UseBuffer(dec_handle, &((*pBufHdrs)[bufCnt]),
@@ -2328,14 +2382,16 @@ static OMX_ERRORTYPE use_output_buffer ( OMX_COMPONENTTYPE *dec_handle,
     *pBufHdrs= (OMX_BUFFERHEADERTYPE **)
                    malloc(sizeof(OMX_BUFFERHEADERTYPE)* bufCntMin);
     if(*pBufHdrs == NULL){
-        DEBUG_PRINT_ERROR("\n m_inp_heap_ptr Allocation failed ");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("\n m_inp_heap_ptr Allocation failed ");
         return OMX_ErrorInsufficientResources;
      }
     output_use_buffer = true;
     p_eglHeaders = (struct temp_egl **)
                     malloc(sizeof(struct temp_egl *)* bufCntMin);
     if (!p_eglHeaders){
-        DEBUG_PRINT_ERROR("\n EGL allocation failed");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("\n EGL allocation failed");
         return OMX_ErrorInsufficientResources;
     }
 
@@ -2345,13 +2401,15 @@ static OMX_ERRORTYPE use_output_buffer ( OMX_COMPONENTTYPE *dec_handle,
       p_eglHeaders[bufCnt] = (struct temp_egl*)
                          malloc(sizeof(struct temp_egl));
       if(!p_eglHeaders[bufCnt]) {
-          DEBUG_PRINT_ERROR("\n EGL allocation failed");
+	  // FIXME: ???
+          //DEBUG_PRINT_ERROR("\n EGL allocation failed");
           return OMX_ErrorInsufficientResources;
       }
       p_eglHeaders[bufCnt]->pmem_fd = open(PMEM_DEVICE,O_RDWR);
       p_eglHeaders[bufCnt]->offset = 0;
       if(p_eglHeaders[bufCnt]->pmem_fd < 0) {
-          DEBUG_PRINT_ERROR("\n open failed %s",PMEM_DEVICE);
+	  // FIXME: ???
+          //DEBUG_PRINT_ERROR("\n open failed %s",PMEM_DEVICE);
           return OMX_ErrorInsufficientResources;
       }
 
@@ -2360,12 +2418,15 @@ static OMX_ERRORTYPE use_output_buffer ( OMX_COMPONENTTYPE *dec_handle,
       align_pmem_buffers(p_eglHeaders[bufCnt]->pmem_fd, bufSize,
                                   8192);
 #endif
-      DEBUG_PRINT_ERROR("\n allocation size %d pmem fd %d",bufSize,p_eglHeaders[bufCnt]->pmem_fd);
+      // FIXME: ???
+      //DEBUG_PRINT_ERROR("\n allocation size %d pmem fd %d",bufSize,p_eglHeaders[bufCnt]->pmem_fd);
       pvirt = (unsigned char *)mmap(NULL,bufSize,PROT_READ|PROT_WRITE,
                       MAP_SHARED,p_eglHeaders[bufCnt]->pmem_fd,0);
-      DEBUG_PRINT_ERROR("\n Virtaul Address %p Size %d",pvirt,bufSize);
+      // FIXME: ???
+      //DEBUG_PRINT_ERROR("\n Virtaul Address %p Size %d",pvirt,bufSize);
       if (pvirt == MAP_FAILED) {
-        DEBUG_PRINT_ERROR("\n mmap failed for buffers");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("\n mmap failed for buffers");
         return OMX_ErrorInsufficientResources;
       }
         use_buf_virt_addr[bufCnt] = (unsigned)pvirt;
@@ -2389,14 +2450,16 @@ static OMX_ERRORTYPE use_output_buffer_multiple_fd ( OMX_COMPONENTTYPE *dec_hand
     *pBufHdrs= (OMX_BUFFERHEADERTYPE **)
                    malloc(sizeof(OMX_BUFFERHEADERTYPE)* bufCntMin);
     if(*pBufHdrs == NULL){
-        DEBUG_PRINT_ERROR("\n m_inp_heap_ptr Allocation failed ");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("\n m_inp_heap_ptr Allocation failed ");
         return OMX_ErrorInsufficientResources;
      }
     pPlatformList = (OMX_QCOM_PLATFORM_PRIVATE_LIST *)
         malloc(sizeof(OMX_QCOM_PLATFORM_PRIVATE_LIST)* bufCntMin);
 
     if(pPlatformList == NULL){
-        DEBUG_PRINT_ERROR("\n pPlatformList Allocation failed ");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("\n pPlatformList Allocation failed ");
         return OMX_ErrorInsufficientResources;
      }
 
@@ -2404,7 +2467,8 @@ static OMX_ERRORTYPE use_output_buffer_multiple_fd ( OMX_COMPONENTTYPE *dec_hand
         malloc(sizeof(OMX_QCOM_PLATFORM_PRIVATE_ENTRY)* bufCntMin);
 
     if(pPlatformEntry == NULL){
-        DEBUG_PRINT_ERROR("\n pPlatformEntry Allocation failed ");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("\n pPlatformEntry Allocation failed ");
         return OMX_ErrorInsufficientResources;
      }
 
@@ -2412,7 +2476,8 @@ static OMX_ERRORTYPE use_output_buffer_multiple_fd ( OMX_COMPONENTTYPE *dec_hand
         malloc(sizeof(OMX_QCOM_PLATFORM_PRIVATE_PMEM_INFO)* bufCntMin);
 
     if(pPMEMInfo == NULL){
-        DEBUG_PRINT_ERROR("\n pPMEMInfo Allocation failed ");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("\n pPMEMInfo Allocation failed ");
         return OMX_ErrorInsufficientResources;
      }
 
@@ -2429,7 +2494,8 @@ static OMX_ERRORTYPE use_output_buffer_multiple_fd ( OMX_COMPONENTTYPE *dec_hand
       pPMEMInfo[bufCnt].offset          =  0;
       pPMEMInfo[bufCnt].pmem_fd = open(PMEM_DEVICE,O_RDWR);;
       if(pPMEMInfo[bufCnt].pmem_fd < 0) {
-          DEBUG_PRINT_ERROR("\n open failed %s",PMEM_DEVICE);
+	  // FIXME: ???
+          //DEBUG_PRINT_ERROR("\n open failed %s",PMEM_DEVICE);
           return OMX_ErrorInsufficientResources;
       }
 #ifndef USE_ION
@@ -2443,7 +2509,8 @@ static OMX_ERRORTYPE use_output_buffer_multiple_fd ( OMX_COMPONENTTYPE *dec_hand
       getFreePmem();
       DEBUG_PRINT("\n Virtaul Address %p Size %d pmem_fd=0x%x",pvirt,bufSize,pPMEMInfo[bufCnt].pmem_fd);
       if (pvirt == MAP_FAILED) {
-        DEBUG_PRINT_ERROR("\n mmap failed for buffers");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("\n mmap failed for buffers");
         return OMX_ErrorInsufficientResources;
       }
       use_buf_virt_addr[bufCnt] = (unsigned)pvirt;
@@ -2474,7 +2541,8 @@ static void do_freeHandle_and_clean_up(bool isDueToError)
          {
             free(pInputBufHdrs[bufCnt]->pBuffer);
             pInputBufHdrs[bufCnt]->pBuffer = NULL;
-            DEBUG_PRINT_ERROR("\nFree(pInputBufHdrs[%d]->pBuffer)",bufCnt);
+	    // FIXME: ???
+            //DEBUG_PRINT_ERROR("\nFree(pInputBufHdrs[%d]->pBuffer)",bufCnt);
          }
          OMX_FreeBuffer(dec_handle, 0, pInputBufHdrs[bufCnt]);
       }
@@ -2541,7 +2609,8 @@ static void do_freeHandle_and_clean_up(bool isDueToError)
     OMX_ERRORTYPE result = OMX_FreeHandle(dec_handle);
     if (result != OMX_ErrorNone)
     {
-       DEBUG_PRINT_ERROR("[OMX Vdec Test] - OMX_FreeHandle error. Error code: %d\n", result);
+       // FIXME: ???
+       //DEBUG_PRINT_ERROR("[OMX Vdec Test] - OMX_FreeHandle error. Error code: %d\n", result);
     }
     dec_handle = NULL;
 
@@ -2824,7 +2893,8 @@ static int Read_Buffer_From_Size_Nal(OMX_BUFFERHEADERTYPE  *pBufHdr)
     bytes_read = read(inputBufferFileFd, pBufHdr->pBuffer + pBufHdr->nOffset + nalSize, size);
     if (bytes_read != size)
     {
-      DEBUG_PRINT_ERROR("Failed to read frame\n");
+      // FIXME: ???
+      //DEBUG_PRINT_ERROR("Failed to read frame\n");
     }
 
     pBufHdr->nTimeStamp = timeStampLfile;
@@ -2871,7 +2941,8 @@ static int Read_Buffer_From_RCV_File_Seq_Layer(OMX_BUFFERHEADERTYPE  *pBufHdr)
     }
     else
     {
-      DEBUG_PRINT_ERROR("Error: Unknown VC1 clip format %x\n", startcode);
+      // FIXME: ???
+      //DEBUG_PRINT_ERROR("Error: Unknown VC1 clip format %x\n", startcode);
     }
 
 #if 0
@@ -2936,7 +3007,8 @@ static int Read_Buffer_From_RCV_File(OMX_BUFFERHEADERTYPE  *pBufHdr)
 
     if(len > pBufHdr->nAllocLen)
     {
-       DEBUG_PRINT_ERROR("Error in sufficient buffer framesize %d, allocalen %d noffset %d\n",len,pBufHdr->nAllocLen, pBufHdr->nOffset);
+       // FIXME: ???
+       //DEBUG_PRINT_ERROR("Error in sufficient buffer framesize %d, allocalen %d noffset %d\n",len,pBufHdr->nAllocLen, pBufHdr->nOffset);
        readOffset = read(inputBufferFileFd, pBufHdr->pBuffer+pBufHdr->nOffset,
                          pBufHdr->nAllocLen - pBufHdr->nOffset);
 
@@ -2991,7 +3063,8 @@ static int Read_Buffer_From_VC1_File(OMX_BUFFERHEADERTYPE  *pBufHdr)
     {
       if (total_bytes == pBufHdr->nAllocLen)
       {
-        DEBUG_PRINT_ERROR("Buffer overflow!");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("Buffer overflow!");
         break;
       }
       //Start codes are always byte aligned.
@@ -3165,9 +3238,10 @@ static int Read_Buffer_From_DivX_4_5_6_File(OMX_BUFFERHEADERTYPE  *pBufHdr)
       if (pckt_ready) {
           loff_t off = (byte_pos - offset_array[pckt_end_idx]);
           if ( lseek64(inputBufferFileFd, -1LL*off , SEEK_CUR) == -1 ){
-              DEBUG_PRINT_ERROR("lseek64 with offset = %lld failed with errno %d"
-                                ", current position =0x%llx", -1LL*off,
-                                errno, lseek64(inputBufferFileFd, 0, SEEK_CUR));
+	      // FIXME: ???
+              //DEBUG_PRINT_ERROR("lseek64 with offset = %lld failed with errno %d"
+              //                  ", current position =0x%llx", -1LL*off,
+              //                  errno, lseek64(inputBufferFileFd, 0, SEEK_CUR));
           }
       }
       else {
@@ -3184,14 +3258,16 @@ static int Read_Buffer_From_DivX_4_5_6_File(OMX_BUFFERHEADERTYPE  *pBufHdr)
           }
           else if (ret == 1){
               if ( lseek64(inputBufferFileFd, -1, SEEK_CUR ) == -1 ){
-                  DEBUG_PRINT_ERROR("lseek64 failed with errno = %d, "
-                                    "current fileposition = %llx",
-                                    errno,
-                                    lseek64(inputBufferFileFd, 0, SEEK_CUR));
+		  // FIXME: ???
+                  //DEBUG_PRINT_ERROR("lseek64 failed with errno = %d, "
+                  //                  "current fileposition = %llx",
+                  //                  errno,
+                  //                  lseek64(inputBufferFileFd, 0, SEEK_CUR));
               }
           }
           else {
-              DEBUG_PRINT_ERROR("Error when checking for EOF");
+	      // FIXME: ???
+              //DEBUG_PRINT_ERROR("Error when checking for EOF");
           }
       }
     } while (!pckt_ready);
@@ -3200,9 +3276,10 @@ static int Read_Buffer_From_DivX_4_5_6_File(OMX_BUFFERHEADERTYPE  *pBufHdr)
     timeStampLfile += timestampInterval;
 #ifdef __DEBUG_DIVX__
     total_bytes += pBufHdr->nFilledLen;
-    ALOGE("[DivX] Packet: Type[%s] Size[%u] TS[%lld] TB[%llx] NFrms[%lld]\n",
-      pckt_type, pBufHdr->nFilledLen, pBufHdr->nTimeStamp,
-	  total_bytes, total_frames);
+    // FIXME: ???
+    //ALOGE("[DivX] Packet: Type[%s] Size[%u] TS[%lld] TB[%llx] NFrms[%lld]\n",
+    //  pckt_type, pBufHdr->nFilledLen, pBufHdr->nTimeStamp,
+    //      total_bytes, total_frames);
 #endif //__DEBUG_DIVX__
     return pBufHdr->nFilledLen;
 }
@@ -3266,12 +3343,14 @@ static int open_video_file ()
     DEBUG_PRINT("Inside %s filename=%s\n", __FUNCTION__, in_filename);
 
     if ( (inputBufferFileFd = open( in_filename, O_RDONLY | O_LARGEFILE) ) == -1 ){
-        DEBUG_PRINT_ERROR("Error - i/p file %s could NOT be opened errno = %d\n",
-                          in_filename, errno);
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("Error - i/p file %s could NOT be opened errno = %d\n",
+        //                  in_filename, errno);
         error_code = -1;
     }
     else {
-        DEBUG_PRINT_ERROR("i/p file %s is opened \n", in_filename);
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("i/p file %s is opened \n", in_filename);
     }
 
     if (takeYuvLog) {
@@ -3279,7 +3358,8 @@ static int open_video_file ()
         outputBufferFile = fopen (outputfilename, "ab");
         if (outputBufferFile == NULL)
         {
-          DEBUG_PRINT_ERROR("ERROR - o/p file %s could NOT be opened\n", outputfilename);
+	  // FIXME: ???
+          //DEBUG_PRINT_ERROR("ERROR - o/p file %s could NOT be opened\n", outputfilename);
           error_code = -1;
         }
         else
@@ -3422,7 +3502,8 @@ int overlay_fb(struct OMX_BUFFERHEADERTYPE *pBufHdr)
     ov_front.id = overlayp->id;
     if (pBufHdr->pPlatformPrivate == NULL)
     {
-        ALOGE("overlay_fb: pPlatformPrivate is null");
+	// FIXME: ???
+        //ALOGE("overlay_fb: pPlatformPrivate is null");
         return -1;
     }
     pPMEMInfo  = (OMX_QCOM_PLATFORM_PRIVATE_PMEM_INFO *)
@@ -3430,8 +3511,8 @@ int overlay_fb(struct OMX_BUFFERHEADERTYPE *pBufHdr)
                     pBufHdr->pPlatformPrivate)->entryList->entry;
     if (pPMEMInfo == NULL)
     {
-
-        ALOGE("overlay_fb: pmem_info is null");
+	//FIXME: ???
+        //ALOGE("overlay_fb: pmem_info is null");
         return -1;
     }
 #if defined(_ANDROID_) && !defined(USE_EGL_IMAGE_TEST_APP) && !defined(USE_EXTERN_PMEM_BUF)
@@ -3488,7 +3569,8 @@ void render_fb(struct OMX_BUFFERHEADERTYPE *pBufHdr)
 
     if (fb_fd < 0)
     {
-        DEBUG_PRINT_ERROR("Warning: /dev/fb0 is not opened!\n");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("Warning: /dev/fb0 is not opened!\n");
         return;
     }
 
@@ -3510,7 +3592,8 @@ void render_fb(struct OMX_BUFFERHEADERTYPE *pBufHdr)
 
     if (pExtraData->eType != OMX_ExtraDataFrameInfo)
     {
-       DEBUG_PRINT_ERROR("pExtraData->eType %d pExtraData->nSize %d\n",pExtraData->eType,pExtraData->nSize);
+       //FIXME: ???
+       //DEBUG_PRINT_ERROR("pExtraData->eType %d pExtraData->nSize %d\n",pExtraData->eType,pExtraData->nSize);
     }
     pExtraFrameInfo = (OMX_QCOM_EXTRADATA_FRAMEINFO *)pExtraData->data;
 
@@ -3521,9 +3604,9 @@ void render_fb(struct OMX_BUFFERHEADERTYPE *pBufHdr)
     vheap = (MemoryHeapBase *)pPMEMInfo->pmem_fd;
 #endif
 
-
-    DEBUG_PRINT_ERROR("DecWidth %d DecHeight %d\n",portFmt.format.video.nStride,portFmt.format.video.nSliceHeight);
-    DEBUG_PRINT_ERROR("DispWidth %d DispHeight %d\n",portFmt.format.video.nFrameWidth,portFmt.format.video.nFrameHeight);
+    // FIXME: ???
+    //DEBUG_PRINT_ERROR("DecWidth %d DecHeight %d\n",portFmt.format.video.nStride,portFmt.format.video.nSliceHeight);
+    //DEBUG_PRINT_ERROR("DispWidth %d DispHeight %d\n",portFmt.format.video.nFrameWidth,portFmt.format.video.nFrameHeight);
 
 
 
@@ -3537,7 +3620,8 @@ void render_fb(struct OMX_BUFFERHEADERTYPE *pBufHdr)
     e->src.memory_id = pPMEMInfo->pmem_fd;
 #endif
 
-    DEBUG_PRINT_ERROR("pmemOffset %d pmemID %d\n",e->src.offset,e->src.memory_id);
+    // FIXME: ???
+    //DEBUG_PRINT_ERROR("pmemOffset %d pmemID %d\n",e->src.offset,e->src.memory_id);
 
     e->dst.width = vinfo.xres;
     e->dst.height = vinfo.yres;
@@ -3612,12 +3696,14 @@ void render_fb(struct OMX_BUFFERHEADERTYPE *pBufHdr)
     //e->src_rect.h = portFmt.format.video.nSliceHeight;
 
     if (ioctl(fb_fd, MSMFB_BLIT, &img)) {
-        DEBUG_PRINT_ERROR("MSMFB_BLIT ioctl failed!\n");
+	// FIXME: ???        
+	//DEBUG_PRINT_ERROR("MSMFB_BLIT ioctl failed!\n");
         return;
     }
 
     if (ioctl(fb_fd, FBIOPAN_DISPLAY, &vinfo) < 0) {
-        DEBUG_PRINT_ERROR("FBIOPAN_DISPLAY failed! line=%d\n", __LINE__);
+	// FIXME: ???        
+	//DEBUG_PRINT_ERROR("FBIOPAN_DISPLAY failed! line=%d\n", __LINE__);
         return;
     }
 
@@ -3690,7 +3776,8 @@ int enable_output_port()
                                 portFmt.nBufferCountActual, portFmt.nBufferSize);
     }
     if (error != OMX_ErrorNone) {
-        DEBUG_PRINT_ERROR("Error - OMX_AllocateBuffer Output buffer error\n");
+	// FIXME: ???        
+	//DEBUG_PRINT_ERROR("Error - OMX_AllocateBuffer Output buffer error\n");
         return -1;
     }
     else
@@ -3706,7 +3793,8 @@ int enable_output_port()
                         portFmt.nBufferCountActual);
     free_op_buf_cnt = portFmt.nBufferCountActual;
     if (error != OMX_ErrorNone) {
-       DEBUG_PRINT_ERROR("ERROR - OMX_UseBuffer Input buffer failed");
+	// FIXME: ???       
+	//DEBUG_PRINT_ERROR("ERROR - OMX_UseBuffer Input buffer failed");
        return -1;
     }
     else {
@@ -3723,21 +3811,24 @@ int enable_output_port()
     }
     if (pOutYUVBufHdrs == NULL)
     {
-        DEBUG_PRINT_ERROR("Error - pOutYUVBufHdrs is NULL\n");
+	// FIXME: ???
+        //DEBUG_PRINT_ERROR("Error - pOutYUVBufHdrs is NULL\n");
         return -1;
     }
     for(bufCnt=0; bufCnt < portFmt.nBufferCountActual; ++bufCnt) {
         DEBUG_PRINT("OMX_FillThisBuffer on output buf no.%d\n",bufCnt);
         if (pOutYUVBufHdrs[bufCnt] == NULL)
         {
-            DEBUG_PRINT_ERROR("Error - pOutYUVBufHdrs[%d] is NULL\n", bufCnt);
+	    // FIXME: ???
+            //DEBUG_PRINT_ERROR("Error - pOutYUVBufHdrs[%d] is NULL\n", bufCnt);
             return -1;
         }
         pOutYUVBufHdrs[bufCnt]->nOutputPortIndex = 1;
         pOutYUVBufHdrs[bufCnt]->nFlags &= ~OMX_BUFFERFLAG_EOS;
         ret = OMX_FillThisBuffer(dec_handle, pOutYUVBufHdrs[bufCnt]);
         if (OMX_ErrorNone != ret) {
-            DEBUG_PRINT_ERROR("ERROR - OMX_FillThisBuffer failed with result %d\n", ret);
+            // FIXME: ???
+	    //DEBUG_PRINT_ERROR("ERROR - OMX_FillThisBuffer failed with result %d\n", ret);
         }
         else
         {
@@ -3761,7 +3852,8 @@ int output_port_reconfig()
     DEBUG_PRINT("Min Buffer Count=%d", portFmt.nBufferCountMin);
     DEBUG_PRINT("Buffer Size=%d", portFmt.nBufferSize);
     if(OMX_DirOutput != portFmt.eDir) {
-        DEBUG_PRINT_ERROR("Error - Expect Output Port\n");
+	// FIXME: ???        
+	//DEBUG_PRINT_ERROR("Error - Expect Output Port\n");
         return -1;
     }
     height = portFmt.format.video.nFrameHeight;
@@ -3848,7 +3940,8 @@ static bool align_pmem_buffers(int pmem_fd, OMX_U32 buffer_size,
   }
   if (ioctl(pmem_fd, PMEM_ALLOCATE_ALIGNED, &allocation) < 0)
   {
-    DEBUG_PRINT_ERROR("\n Aligment failed with pmem driver");
+    // FIXME: ???
+    //DEBUG_PRINT_ERROR("\n Aligment failed with pmem driver");
     return false;
   }
   return true;
@@ -3900,16 +3993,19 @@ void getFreePmem()
    int pmem_fd = open (PMEM_DEVICE,O_RDWR);
 
    if(pmem_fd < 0) {
-     ALOGE("Unable to open pmem device");
+     // FIXME: ???
+     //ALOGE("Unable to open pmem device");
      return;
    }
    struct pmem_freespace fs;
    ret = ioctl(pmem_fd, PMEM_GET_FREE_SPACE, &fs);
    if(ret) {
-     ALOGE("IOCTL to query pmem free space failed");
+     // FIXME: ???
+     //ALOGE("IOCTL to query pmem free space failed");
      goto freespace_query_failed;
    }
-   ALOGE("Available free space %lx largest chunk %lx\n", fs.total, fs.largest);
+   // FIXME: ???
+   //ALOGE("Available free space %lx largest chunk %lx\n", fs.total, fs.largest);
 freespace_query_failed:
    close(pmem_fd);
 #endif
