@@ -1399,7 +1399,7 @@ OMX_ERRORTYPE omx_vdec::component_init(OMX_STRING role)
 #ifdef MAX_RES_1080P
     drv_ctx.output_format = VDEC_YUV_FORMAT_TILE_4x2;
     OMX_COLOR_FORMATTYPE dest_color_format = (OMX_COLOR_FORMATTYPE)
-    QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka;
+    QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka_dup;
     if (!client_buffers.set_color_format(dest_color_format)) {
       DEBUG_PRINT_ERROR("\n Setting color format failed");
       eRet = OMX_ErrorInsufficientResources;
@@ -2731,12 +2731,12 @@ OMX_ERRORTYPE  omx_vdec::get_parameter(OMX_IN OMX_HANDLETYPE     hComp,
           portFmt->eColorFormat = OMX_COLOR_FormatYUV420SemiPlanar;
         else if(1 == portFmt->nIndex)
           portFmt->eColorFormat = (OMX_COLOR_FORMATTYPE)
-            QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka;
+            QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka_dup;
 #endif
 #ifdef MAX_RES_1080P
         if(0 == portFmt->nIndex)
           portFmt->eColorFormat = (OMX_COLOR_FORMATTYPE)
-            QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka;
+            QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka_dup;
 #endif
         else if (1 == portFmt->nIndex) {
           portFmt->eColorFormat = OMX_COLOR_FormatYUV420Planar;
@@ -2881,7 +2881,11 @@ OMX_ERRORTYPE  omx_vdec::get_parameter(OMX_IN OMX_HANDLETYPE     hComp,
                         nativeBuffersUsage->nUsage = (GRALLOC_USAGE_PRIVATE_MM_HEAP | GRALLOC_USAGE_PROTECTED |
                                                       GRALLOC_USAGE_PRIVATE_CP_BUFFER | GRALLOC_USAGE_PRIVATE_UNCACHED);
                 } else {
+#ifdef USE_MM_HEAP
+                        nativeBuffersUsage->nUsage = (GRALLOC_USAGE_PRIVATE_MM_HEAP);
+#else
                         nativeBuffersUsage->nUsage = (GRALLOC_USAGE_PRIVATE_IOMMU_HEAP);
+#endif
                 }
 #else
 #if defined (MAX_RES_720P) ||  defined (MAX_RES_1080P_EBI)
@@ -3132,7 +3136,7 @@ OMX_ERRORTYPE  omx_vdec::set_parameter(OMX_IN OMX_HANDLETYPE     hComp,
          if(portFmt->eColorFormat == OMX_COLOR_FormatYUV420SemiPlanar)
            op_format = VDEC_YUV_FORMAT_NV12;
          else if(portFmt->eColorFormat ==
-           QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka ||
+           QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka_dup ||
             portFmt->eColorFormat == OMX_COLOR_FormatYUV420Planar)
            op_format = VDEC_YUV_FORMAT_TILE_4x2;
          else
@@ -7522,7 +7526,11 @@ int omx_vdec::alloc_map_ion_memory(OMX_U32 buffer_size,
   if(secure_mode) {
     alloc_data->flags = (ION_HEAP(MEM_HEAP_ID) | ION_SECURE);
   } else {
+#ifdef USE_MM_HEAP
+    alloc_data->flags = (ION_HEAP(MEM_HEAP_ID));
+#else
     alloc_data->flags = (ION_HEAP(ION_IOMMU_HEAP_ID));
+#endif
   }
   rc = ioctl(fd,ION_IOC_ALLOC,alloc_data);
   if (rc || !alloc_data->handle) {
@@ -8992,7 +9000,7 @@ bool omx_vdec::allocate_color_convert_buf::set_color_format(
   }
   if (omx->drv_ctx.output_format == VDEC_YUV_FORMAT_TILE_4x2)
     drv_color_format = (OMX_COLOR_FORMATTYPE)
-    QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka;
+    QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka_dup;
   else {
     DEBUG_PRINT_ERROR("\n Incorrect color format");
     status = false;
@@ -9222,7 +9230,7 @@ bool omx_vdec::allocate_color_convert_buf::get_color_format(OMX_COLOR_FORMATTYPE
   if (!enabled) {
     if (omx->drv_ctx.output_format == VDEC_YUV_FORMAT_TILE_4x2)
      dest_color_format =  (OMX_COLOR_FORMATTYPE)
-            QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka;
+            QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka_dup;
     else if (omx->drv_ctx.output_format == VDEC_YUV_FORMAT_NV12)
       dest_color_format = OMX_COLOR_FormatYUV420SemiPlanar;
     else

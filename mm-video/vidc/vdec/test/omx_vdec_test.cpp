@@ -1909,13 +1909,13 @@ int Play_Decoder()
     else
     {
         color_fmt = (OMX_COLOR_FORMATTYPE)
-           QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka;
+           QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka_dup;
     }
 #elif _COPPER_
         color_fmt = OMX_COLOR_FormatYUV420SemiPlanar;
 #else
        color_fmt = (OMX_COLOR_FORMATTYPE)
-           QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka;
+           QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka_dup;
 #endif
 
     while (ret == OMX_ErrorNone)
@@ -3349,7 +3349,7 @@ void overlay_set()
     overlayp->src.height = sliceheight;
 #ifdef MAX_RES_720P
     overlayp->src.format = MDP_Y_CRCB_H2V2;
-    if(color_fmt == (OMX_COLOR_FORMATTYPE)QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka)
+    if(color_fmt == (OMX_COLOR_FORMATTYPE)QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka_dup)
     {
         overlayp->src.format = MDP_Y_CRCB_H2V2_TILE;
     }
