@@ -86,6 +86,11 @@ LOCAL_SRC_FILES         := src/frameparser.cpp
 LOCAL_SRC_FILES         += src/h264_utils.cpp
 LOCAL_SRC_FILES         += src/ts_parser.cpp
 LOCAL_SRC_FILES         += src/mp4_utils.cpp
+
+ifeq ($(TARGET_BOARD_PLATFORM), msm8660)
+    LOCAL_CFLAGS += -DUSE_MM_HEAP
+endif
+
 LOCAL_SRC_FILES         += src/omx_vdec.cpp
 LOCAL_SRC_FILES         += ../common/src/extra_data_handler.cpp
 LOCAL_SRC_FILES         += ../common/src/vidc_color_converter.cpp

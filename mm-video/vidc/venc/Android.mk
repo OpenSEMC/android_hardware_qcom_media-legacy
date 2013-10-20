@@ -71,6 +71,11 @@ LOCAL_SHARED_LIBRARIES    := liblog libutils libbinder libcutils \
 
 LOCAL_SRC_FILES   := src/omx_video_base.cpp
 LOCAL_SRC_FILES   += src/omx_video_encoder.cpp
+
+ifeq ($(TARGET_BOARD_PLATFORM), msm8660)
+    LOCAL_CFLAGS += -DUSE_MM_HEAP
+endif
+
 ifeq ($(TARGET_BOARD_PLATFORM),msm8974)
 LOCAL_SRC_FILES   += src/video_encoder_device_copper.cpp
 else
